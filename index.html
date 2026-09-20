@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fa">
+  <meta name="description" content="点を動かして、統計を体感しよう。4つのモードで学ぶ統計量チャレンジ。">
+  <title>統計量チャレンジ</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>統計量チャレンジ</a><span class="header-note">動かして、わかる。統計の実験室</span><button class="help-link" id="help-link">遊び方 <span>↗</span></button></header>
+  <main>
+    <section class="intro"><div class="eyebrow"><span></span> PLAY WITH DATA</div><h1>点を動かす。<br class="mobile-break">統計が見えてくる。</h1><p>ひとつの点が動くと、何が変わる？<br class="mobile-break"> 目標の統計量を目指して、試してみよう。</p></section>
+    <nav class="mode-tabs" aria-label="チャレンジのモード">
+      <button data-mode="representative" aria-pressed="true"><span class="mode-number">01</span>代表値<span class="mode-sub">平均・中央値・最頻値</span></button>
+      <button data-mode="summary" aria-pressed="false"><span class="mode-number">02</span>5数要約<span class="mode-sub">データの全体像</span></button>
+      <button data-mode="spread" aria-pressed="false"><span class="mode-number">03</span>散らばり<span class="mode-sub">範囲・四分位範囲</span></button>
+      <button data-mode="variance" aria-pressed="false"><span class="mode-number">04</span>平均・分散<span class="mode-sub">中心と散らばり</span></button>
+    </nav>
+    <form id="settings" class="settings"><div class="settings-title"><span aria-hidden="true">⚙</span> 問題の設定</div><label id="normal-count-setting">点の個数 <input id="count" type="number" min="2" max="100" step="1" value="10" required><span>個</span></label><div id="variance-count" class="count-options" role="group" aria-label="平均・分散モードの点の個数" hidden><span>点の個数</span><button type="button" data-count="10" aria-pressed="true">10個</button><button type="button" data-count="20" aria-pressed="false">20個</button></div><div class="range-settings" role="group" aria-label="値の範囲"><span>値の範囲</span><button type="button" data-range="10" aria-pressed="false">0〜10</button><button type="button" data-range="20" aria-pressed="true">0〜20</button><button type="button" data-range="50" aria-pressed="false">0〜50</button></div><button type="submit" class="button primary"><span aria-hidden="true">＋</span> 新しい問題</button><p id="settings-error" class="error" role="alert"></p></form>
+    <div class="game-layout">
+      <section class="card plot-card" aria-labelledby="plot-title"><div class="card-heading"><div><div class="eyebrow">YOUR PLAYGROUND</div><h2 id="plot-title">データを動かそう</h2></div><span class="count-badge" id="count-badge">10個のデータ</span></div><div class="plot-instruction"><span class="drag-icon" aria-hidden="true">↔</span><span>点を左右にドラッグして、整数の目盛に合わせよう</span></div><div class="plot-scroll" id="plot-scroll"><div id="plot" class="plot" aria-label="ドラッグまたは矢印キーで操作できるドットプロット"><div id="grid"></div><div id="dots"></div><div id="axis"></div></div><div id="boxplot" class="boxplot" hidden></div></div><div class="plot-footer"><span><i class="legend-dot"></i> <span id="selection-hint">点を選ぶと、下のボタンでも動かせます</span></span><span id="move-count">0回移動</span></div><div class="point-controls"><div class="nudge-controls"><button id="left" class="icon-button" aria-label="選択した点を1小さくする" disabled>−</button><span id="selected-value">点を選択</span><button id="right" class="icon-button" aria-label="選択した点を1大きくする" disabled>＋</button></div><button id="reset" class="button reset"><span aria-hidden="true">↺</span> リセット</button></div><div id="reference" class="reference"></div></section>
+      <aside class="card target-card" aria-labelledby="target-title"><div class="card-heading"><div><div class="eyebrow">THE CHALLENGE</div><h2 id="target-title">目標に近づけよう</h2></div><span class="target-icon" aria-hidden="true">◎</span></div><p class="target-intro">すべての統計量が一致したらクリア！</p><div class="stat-table"><div class="stat-table-head"><span>統計量</span><span>目標</span><span>現在</span><span></span></div><div id="stats"></div></div><div class="progress-heading"><span>目標の達成度</span><strong id="progress-label">0 / 3</strong></div><div class="progress-track"><div id="progress-bar"></div></div><div id="status" class="status" role="status" aria-live="polite"></div><div class="target-note"><span aria-hidden="true">✧</span><p>答えはひとつとは限りません。<br>いろいろな並べ方で挑戦してみよう。</p></div></aside>
+    </div>
+    <section class="learning card" id="help"><details open><summary><span><span class="book-icon" aria-hidden="true">▤</span> 遊び方と統計量のヒント</span><span class="chevron">⌄</span></summary><div class="learning-content"><div><h3>まずは、ひとつ動かしてみよう。</h3><p>点はそれぞれ1つのデータです。同じ値の点は縦に積み重なります。点を動かしても、目標は変わりません。緑のチェックをすべて集めましょう。</p><p>点をタップして「− / ＋」、またはキーボードの左右矢印でも操作できます。点は直接クリック／タップして選択できます。移動した点は移動先の列の一番上に積み重なります。目盛の数字が省略されていても、点はすべての整数位置に置けます。</p><p>点は2〜100個（平均・分散は10個／20個）。値の範囲は0〜10、0〜20、0〜50から選べます。設定は「新しい問題」で反映されます。</p></div><div id="mode-explanation"></div></div></details></section>
+    <footer><span class="footer-brand">統計量チャレンジ</span><span>正解までの試行錯誤が、学びになる。</span></footer>
+  </main>
+  <dialog id="clear-dialog" class="clear-dialog" aria-labelledby="clear-title" aria-describedby="clear-description">
+    <div id="confetti" class="confetti" aria-hidden="true"></div>
+    <button id="clear-close" class="clear-close" type="button" aria-label="結果を閉じてデータを見る">×</button>
+    <div class="clear-emblem" aria-hidden="true">✓</div>
+    <p class="eyebrow">CHALLENGE COMPLETE</p>
+    <h2 id="clear-title">CLEAR!</h2>
+    <p id="clear-description">すべての統計量が<br>目標とぴったり一致しました。</p>
+    <ul id="clear-stats" class="clear-stats"></ul>
+    <p id="clear-moves" class="clear-moves"></p>
+    <div class="clear-actions">
+      <button id="clear-new" class="button primary" type="button" autofocus>＋ 新しい問題</button>
+      <button id="clear-again" class="button" type="button">↺ もう一度</button>
+    </div>
+    <p class="clear-footnote">「もう一度」で同じ問題の初期配置に戻ります</p>
+  </dialog>
+</body>
+</html>
